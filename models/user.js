@@ -5,8 +5,10 @@
  * Author: Yu-Kai "Isaac_the_Man" Wang
  */
 
+require('dotenv').config()
 const mongoose = require('mongoose')
 const Joi = require('joi')
+const jwt = require('jsonwebtoken')
 
 
 // Mongo DB schema
@@ -14,6 +16,13 @@ const userMongoSchema = new mongoose.Schema({
 	username: String,
 	password: String
 })
+// generate JWT token for user
+userMongoSchema.methods.generateAuthToken = function() {
+	return jwt.sign({
+		_id: this.id
+	}, process.env.JWT_PRIVATE_KEY)
+}
+// register model in mongoose
 const User =  mongoose.model('User', userMongoSchema)
 
 // schema for Joi validation
@@ -27,12 +36,7 @@ const userValidateSchema = Joi.object({
 		.pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
 		.required()
 })
-
-// userSchema.methods.generateAuthToken = function() {
-// 	return jwt.sign({_id: this.id}, config.jwtPrivateKey)
-// }
-
-
+// schema validation function
 function validateUser(user) {
 	return userValidateSchema.validate(user)
 }

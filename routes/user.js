@@ -6,12 +6,13 @@
 
 const express = require('express')
 const router = express.Router()
-const {User, validate} = require("../models/user")
+const {User, validate} = require('../models/user')
 const bcrypt = require('bcrypt')
+const auth = require('../middleware/auth')
 
 
-// create new user
-router.post('/', async (req, res) => {
+// create new user (auth)
+router.post('/', auth, async (req, res) => {
     // input validation
     const {error} = validate(req.body)
     if (error) {
@@ -38,7 +39,10 @@ router.post('/', async (req, res) => {
         return res.status(500).send('Error occured while creating user.')
     }
 
-    return res.send('user created.')
+    // generate and return auth token
+    const token = user.generateAuthToken()
+
+    return res.send(token)
 })
 
 // exports
