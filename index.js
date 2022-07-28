@@ -6,12 +6,13 @@
 require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
+const cors = require('cors')
 const userRouter = require('./routes/user');
 const authRouter = require('./routes/auth');
 
 
 // check for critical env variables
-const envVars = ['DB_NAME', 'SERVER_PORT', 'SERVER_HOST', 'JWT_PRIVATE_KEY']
+const envVars = ['DB_NAME', 'SERVER_PORT', 'SERVER_HOST', 'JWT_PRIVATE_KEY', 'JWT_EXPIRE_MINUTES']
 envVars.forEach((item) => {
 	if (process.env[item] === undefined) {
 		console.error(`Env variable "${item}" not defined.`)
@@ -34,6 +35,7 @@ const app = express()
 // middlewares
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
+app.use(cors())
 
 // default root hook
 app.get('/api', (req, res) => {

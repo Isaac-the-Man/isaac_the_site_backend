@@ -19,8 +19,11 @@ const userMongoSchema = new mongoose.Schema({
 // generate JWT token for user
 userMongoSchema.methods.generateAuthToken = function() {
 	return jwt.sign({
-		_id: this.id
-	}, process.env.JWT_PRIVATE_KEY)
+		id: this.id,
+		username: this.username
+	}, process.env.JWT_PRIVATE_KEY, {
+		expiresIn: process.env.JWT_EXPIRE_MINUTES * 60	// token expires in N seconds
+	})
 }
 // register model in mongoose
 const User =  mongoose.model('User', userMongoSchema)

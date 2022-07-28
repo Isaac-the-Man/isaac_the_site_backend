@@ -8,9 +8,15 @@ const express = require('express')
 const router = express.Router()
 const {User, validate} = require('../models/user')
 const bcrypt = require('bcrypt')
+const auth = require('../middleware/auth')
 
 
-// authenticate user
+// verify auth token (auth)
+router.post('/verify', auth, async (req, res) => {
+    res.send('verified.')
+})
+
+// get auth token with username and password
 router.post('/', async (req, res) => {
     // input validation
     const {error} = validate(req.body)
@@ -38,6 +44,25 @@ router.post('/', async (req, res) => {
     }
 
     // generate and return auth token
+    const token = user.generateAuthToken()
+
+    return res.send(token)
+})
+
+// renew token with old auth token (auth)
+router.post('/renew', auth, async (req, res) => {
+    // query for user
+    let user
+    try {
+        user = await User.findById(req.user.id)
+    } catch(e) {
+        console.error('Error while querying user from database.')
+        console.error(e)
+        return res.status(500).send('Error while generating auth token.')
+    }
+
+
+    // generate new auth token
     const token = user.generateAuthToken()
 
     return res.send(token)

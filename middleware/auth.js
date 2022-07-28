@@ -23,7 +23,7 @@ function auth(req, res, next) {
         next()
     } catch(e) {
         // invalid token
-        return res.status(403).send('Unauthorized.')
+        return res.status(403).send('Token expired or unauthorized.')
     }
 }
 
