@@ -6,7 +6,7 @@
 
 const express = require('express')
 const router = express.Router()
-const {User, validate} = require('../models/user')
+const {User, validateUser} = require('../models/user')
 const bcrypt = require('bcrypt')
 const auth = require('../middleware/auth')
 
@@ -14,7 +14,7 @@ const auth = require('../middleware/auth')
 // create new user (auth)
 router.post('/', auth, async (req, res) => {
     // input validation
-    const {error} = validate(req.body)
+    const {error} = validateUser(req.body)
     if (error) {
         return res.status(400).send(error.details[0].message)
     }
