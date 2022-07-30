@@ -11,10 +11,12 @@
     "rand-token": "^1.0.1"
   },
   "devDependencies": {
-    "eslint": "^8.20.0"
+    "eslint": "^8.20.0",
+    "nodemon": "^2.0.19"
   },
   "scripts": {
-    "dev": "node index.js"
+    "dev": "nodemon index.js",
+    "start": "node index.js"
   },
   "name": "isaac_the_site_backend",
   "version": "1.0.0",
